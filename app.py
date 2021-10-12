@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    page_list = searcher("math")
+    page_list = searcher("Philosophy of logic")
     print(page_list)
     how_many = philosophy_finder(page_list[0])
     return f'Trying to find philosophy: {how_many}'
