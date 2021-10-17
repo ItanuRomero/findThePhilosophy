@@ -1,7 +1,6 @@
 import urllib3
 from bs4 import BeautifulSoup
 import time
-import ssl
 
 
 def crawl(
@@ -20,16 +19,10 @@ def crawl(
         site = url.split("/")[-1]
         print(f"{deep} Entering {site}")
         how_many_times += 1
-
-    # Sleep to avoid getting banned
     time.sleep(sleep_time)
     site = pool.request("GET", url)
     soup = BeautifulSoup(site.data, parser="lxml")
-
-    # Get links from wiki (I'll show it later)
     links = get_links_from_wiki(soup=soup, n=n, prefix=prefix)
-
-    # If phrase was given check if any of the links have it
     is_phrase_present = any([phrase in link for link in links]) and phrase is not None
     if deep > 0 and not is_phrase_present:
         return (
@@ -53,13 +46,9 @@ def crawl(
 
 def get_links_from_wiki(soup, n=5, prefix="https://en.wikipedia.org"):
     arr = []
-
-    # Get div with article contents
     div = soup.find("div", class_="mw-parser-output")
 
     for element in div.find_all("p") + div.find_all("ul"):
-        # In each paragraph find all <a href="/wiki/article_name"></a> and
-        # extract "/wiki/article_name"
         for i, a in enumerate(element.find_all("a", href=True)):
             if len(arr) >= n:
                 break
@@ -74,7 +63,11 @@ def get_links_from_wiki(soup, n=5, prefix="https://en.wikipedia.org"):
 
 def start(start_page):
     pool_main = urllib3.PoolManager(cert_reqs='CERT_NONE')
-    links, how_many_times = crawl(pool_main, start_page, phrase="Philosophy", deep=50, n=1, verbose=True)
-    return links, how_many_times
+    return crawl(pool_main,
+                 start_page,
+                 phrase="Philosophy",
+                 deep=50,
+                 n=1,
+                 verbose=True)
 
-# inspired by: https://dev.to/finloop/getting-to-philosophy-with-python-4nmc
+# inspired by: https://dev.to/finloop/getting-to-philosophy-with-python-4nmc - Thanks Piotr
