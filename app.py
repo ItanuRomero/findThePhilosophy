@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from philosophy_finder import searcher
-from flask_cors import CORS
 from getting_to_philopy import start
 import re
 import os
@@ -46,5 +45,4 @@ def how_many_times():
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 33507))
-    app.run(port=port)
-    CORS(app)
+    app.run(host='0.0.0.0', port=port)
