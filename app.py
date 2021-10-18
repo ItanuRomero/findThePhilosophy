@@ -38,7 +38,10 @@ def how_many_times():
         )
         return response
     else:
-        return 'insert article name'
+        return jsonify(
+            error='Insert the article name on URL',
+            see_docs="https://github.com/ItanuRomero/findThePhilosophy",
+        )
 
 
 app.run()
