@@ -3,9 +3,9 @@ from philosophy_finder import searcher
 from flask_cors import CORS
 from getting_to_philopy import start
 import re
+import os
 
 app = Flask(__name__)
-CORS(app)
 
 
 @app.route("/")
@@ -44,5 +44,7 @@ def how_many_times():
         )
 
 
-app.run()
-CORS(app)
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 5000))
+    app.run(port=port)
+    CORS(app)
